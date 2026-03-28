@@ -1,0 +1,17 @@
+# Rust build artifacts
+target/
+pkg/
+
+# wasm-pack output
+*.wasm
+*.d.ts
+*.js.map
+
+# OS / editors
+.DS_Store
+*.log
+.idea/
+*.swp
+
+# This script
+generate-history.sh
