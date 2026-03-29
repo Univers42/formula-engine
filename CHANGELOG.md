@@ -33,3 +33,4 @@ All notable changes are documented here.
 - **14:04** `feat(compiler)` emit Call instruction encoding function name and arity
 - **14:12** `feat(compiler)` emit LoadProp for property access; store field name in pool
 - **14:28** `feat(vm)` add arithmetic ops +, -, *, / with number coercion
+- **14:35** `feat(vm)` add modulo % and exponentiation ** operators
