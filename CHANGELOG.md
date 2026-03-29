@@ -27,3 +27,4 @@ All notable changes are documented here.
 - **12:24** `feat(parser)` parse parenthesised sub-expressions and grouping
 - **12:32** `feat(parser)` parse function calls: identifier followed by argument list in ()
 - **12:40** `feat(parser)` add property access: prop["field-name"] expression form
+- **13:41** `feat(compiler)` push number and string constants into the constant pool
