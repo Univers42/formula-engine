@@ -49,3 +49,4 @@ All notable changes are documented here.
 - **17:11** `feat(wasm)` add get_dependencies and free_formula handle management exports
 - **17:18** `feat(wasm)` add clear_formula_cache and formula_handle_count exports
 - **17:34** `feat(bridge)` add evalFormula one-shot compile+evaluate helper
+- **17:42** `feat(bridge)` add batchEvaluate for columnar data processing
