@@ -52,3 +52,4 @@ All notable changes are documented here.
 - **17:42** `feat(bridge)` add batchEvaluate for columnar data processing
 - **17:49** `feat(bridge)` add compileFormula returning a cached reusable handle
 - **17:57** `feat(bridge)` add validateFormula resolving errors and dependency list
+- **18:05** `feat(bridge)` add non-blocking auto-init side-effect on module import
