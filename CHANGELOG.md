@@ -13,3 +13,4 @@ All notable changes are documented here.
 - **10:12** `feat(types)` impl Display for FormulaValue with Notion-style rendering
 - **10:28** `feat(error)` add LexError, ParseError, CompileError and RuntimeError variants
 - **10:36** `feat(error)` impl From<FormulaError> for JsValue for WASM boundary crossing
+- **10:51** `feat(lexer)` tokenize integer and floating-point number literals
