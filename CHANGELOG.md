@@ -47,3 +47,4 @@ All notable changes are documented here.
 - **16:55** `feat(wasm)` add batch_evaluate for whole-table row processing
 - **17:03** `feat(wasm)` add validate export returning error list and dependency names
 - **17:11** `feat(wasm)` add get_dependencies and free_formula handle management exports
+- **17:18** `feat(wasm)` add clear_formula_cache and formula_handle_count exports
