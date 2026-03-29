@@ -41,3 +41,4 @@ All notable changes are documented here.
 - **15:37** `feat(text)` add startsWith, endsWith, replace, split and join helpers
 - **15:53** `feat(date)` add dateAdd and dateDiff with Year/Month/Week/Day/Hour units
 - **16:01** `feat(date)` add dateFormat with strftime-style token substitution
+- **16:16** `feat(array)` add unique, flatten and first/last array helpers
