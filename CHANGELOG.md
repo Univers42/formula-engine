@@ -22,3 +22,4 @@ All notable changes are documented here.
 - **11:38** `feat(lexer)` skip whitespace and single-line // comments between tokens
 - **11:53** `feat(parser)` parse number, string, bool and null literal expressions
 - **12:01** `feat(parser)` implement precedence table and parse_expr entry point
+- **12:09** `feat(parser)` add binary operator parsing with left-associativity
