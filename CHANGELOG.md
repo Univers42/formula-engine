@@ -36,3 +36,4 @@ All notable changes are documented here.
 - **14:35** `feat(vm)` add modulo % and exponentiation ** operators
 - **14:43** `feat(vm)` add comparison ops ==, !=, <, >, <=, >= for number and text
 - **14:51** `feat(vm)` add logical and/or with short-circuit via jump instructions
+- **14:59** `feat(vm)` dispatch Call instruction to built-in function registry
