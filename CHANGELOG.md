@@ -57,3 +57,4 @@ All notable changes are documented here.
 - **18:20** `fix(parser)` reject and/or/not as identifier names (reserved-word guard)
 - **18:28** `fix(vm)` propagate RuntimeError across Call boundaries instead of panicking
 - **18:36** `perf(vm)` cache compiled Chunk by expression hash to avoid recompilation
+- **18:44** `perf(wasm)` batch context serialization: single JSON.stringify call per row
