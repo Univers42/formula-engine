@@ -38,3 +38,4 @@ All notable changes are documented here.
 - **14:51** `feat(vm)` add logical and/or with short-circuit via jump instructions
 - **14:59** `feat(vm)` dispatch Call instruction to built-in function registry
 - **15:06** `feat(vm)` resolve LoadProp from execution context JSON map
+- **15:37** `feat(text)` add startsWith, endsWith, replace, split and join helpers
