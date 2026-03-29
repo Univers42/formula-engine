@@ -25,3 +25,4 @@ All notable changes are documented here.
 - **12:09** `feat(parser)` add binary operator parsing with left-associativity
 - **12:16** `feat(parser)` add unary minus and logical not prefix operators
 - **12:24** `feat(parser)` parse parenthesised sub-expressions and grouping
+- **12:32** `feat(parser)` parse function calls: identifier followed by argument list in ()
