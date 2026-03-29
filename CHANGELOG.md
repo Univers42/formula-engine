@@ -56,3 +56,4 @@ All notable changes are documented here.
 - **18:13** `fix(lexer)` handle UTF-8 multi-byte emoji in string len and substr
 - **18:20** `fix(parser)` reject and/or/not as identifier names (reserved-word guard)
 - **18:28** `fix(vm)` propagate RuntimeError across Call boundaries instead of panicking
+- **18:36** `perf(vm)` cache compiled Chunk by expression hash to avoid recompilation
