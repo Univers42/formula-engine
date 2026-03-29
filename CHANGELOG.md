@@ -44,3 +44,4 @@ All notable changes are documented here.
 - **16:16** `feat(array)` add unique, flatten and first/last array helpers
 - **16:32** `feat(logic)` add and/or/not as callable wrappers for use in formulas
 - **16:47** `feat(wasm)` add evaluate export: run a compiled handle against a JSON context
+- **16:55** `feat(wasm)` add batch_evaluate for whole-table row processing
