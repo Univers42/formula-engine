@@ -42,3 +42,4 @@ All notable changes are documented here.
 - **15:53** `feat(date)` add dateAdd and dateDiff with Year/Month/Week/Day/Hour units
 - **16:01** `feat(date)` add dateFormat with strftime-style token substitution
 - **16:16** `feat(array)` add unique, flatten and first/last array helpers
+- **16:32** `feat(logic)` add and/or/not as callable wrappers for use in formulas
