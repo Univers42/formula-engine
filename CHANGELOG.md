@@ -30,3 +30,4 @@ All notable changes are documented here.
 - **13:41** `feat(compiler)` push number and string constants into the constant pool
 - **13:49** `feat(compiler)` emit BinOp instructions from binary expression nodes
 - **13:57** `feat(compiler)` emit UnaryOp instructions from prefix expression nodes
+- **14:04** `feat(compiler)` emit Call instruction encoding function name and arity
