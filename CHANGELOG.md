@@ -28,3 +28,4 @@ All notable changes are documented here.
 - **12:32** `feat(parser)` parse function calls: identifier followed by argument list in ()
 - **12:40** `feat(parser)` add property access: prop["field-name"] expression form
 - **13:41** `feat(compiler)` push number and string constants into the constant pool
+- **13:49** `feat(compiler)` emit BinOp instructions from binary expression nodes
