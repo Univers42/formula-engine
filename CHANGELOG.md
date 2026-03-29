@@ -53,3 +53,4 @@ All notable changes are documented here.
 - **17:49** `feat(bridge)` add compileFormula returning a cached reusable handle
 - **17:57** `feat(bridge)` add validateFormula resolving errors and dependency list
 - **18:05** `feat(bridge)` add non-blocking auto-init side-effect on module import
+- **18:13** `fix(lexer)` handle UTF-8 multi-byte emoji in string len and substr
