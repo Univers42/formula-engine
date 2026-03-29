@@ -19,3 +19,4 @@ All notable changes are documented here.
 - **11:14** `feat(lexer)` add all operator tokens: +, -, *, /, %, ==, !=, <, >, <=, >=
 - **11:22** `feat(lexer)` add punctuation tokens: (, ), [, ], ,, . and prop-access bracket
 - **11:30** `feat(lexer)` track line and column for every token for precise error spans
+- **11:38** `feat(lexer)` skip whitespace and single-line // comments between tokens
