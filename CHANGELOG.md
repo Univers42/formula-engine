@@ -10,3 +10,4 @@ All notable changes are documented here.
 - **09:49** `feat(types)` add Array(Vec<FormulaValue>) variant for aggregate functions
 - **09:57** `feat(types)` add Expr AST node enum (Literal, Ident, BinOp, UnaryOp, Call, Prop)
 - **10:05** `feat(types)` add BinOp and UnaryOp enums with all operator variants
+- **10:12** `feat(types)` impl Display for FormulaValue with Notion-style rendering
