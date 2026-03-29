@@ -15,3 +15,4 @@ All notable changes are documented here.
 - **10:36** `feat(error)` impl From<FormulaError> for JsValue for WASM boundary crossing
 - **10:51** `feat(lexer)` tokenize integer and floating-point number literals
 - **10:59** `feat(lexer)` add double-quoted string literal with backslash escape sequences
+- **11:07** `feat(lexer)` tokenize identifiers and map reserved words (and, or, not, if, true, false, null)
