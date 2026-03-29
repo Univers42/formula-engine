@@ -54,3 +54,4 @@ All notable changes are documented here.
 - **17:57** `feat(bridge)` add validateFormula resolving errors and dependency list
 - **18:05** `feat(bridge)` add non-blocking auto-init side-effect on module import
 - **18:13** `fix(lexer)` handle UTF-8 multi-byte emoji in string len and substr
+- **18:20** `fix(parser)` reject and/or/not as identifier names (reserved-word guard)
