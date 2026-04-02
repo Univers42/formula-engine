@@ -145,15 +145,7 @@ export function batchEvaluate(formula: string, rows: PropertyMap[]): unknown[] {
 /** Validate a formula (check syntax, return dependencies). */
 export function validateFormula(formula: string): ValidateResult {
   if (!wasmEngine) {
-    try {
-      return { ok: true, errors: [], dependencies: [] };
-    } catch (e) {
-      return {
-        ok: false,
-        errors: [{ message: String(e), start: 0, end: formula.length }],
-        dependencies: [],
-      };
-    }
+    return { ok: true, errors: [], dependencies: [] };
   }
   const resultJson = wasmEngine.validate(formula);
   return JSON.parse(resultJson);
