@@ -1,0 +1,16 @@
+{
+  "name": "formula-engine",
+  "type": "module",
+  "description": "High-performance formula engine for Notion-like database system",
+  "version": "0.1.0",
+  "files": [
+    "formula_engine_bg.wasm",
+    "formula_engine.js",
+    "formula_engine.d.ts"
+  ],
+  "main": "formula_engine.js",
+  "types": "formula_engine.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

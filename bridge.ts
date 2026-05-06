@@ -55,27 +55,24 @@ export async function initFormulaEngine(): Promise<boolean> {
     return false;
   }
 
-  if (!initPromise) {
-    initPromise = (async () => {
-      try {
-        const modulePath = './pkg/formula_engine.js';
-        const mod = await import(/* @vite-ignore */ modulePath);
-        await mod.default();                   // WebAssembly.instantiate
-        wasmEngine = mod as unknown as WasmEngine;
-        return true;
-      } catch (err) {
-        console.warn('[formula-engine] WASM init failed, formulas disabled:', err);
-        initFailed = true;
-        return false;
-      }
-    })();
-  }
+  initPromise ??= (async () => {
+    try {
+      const mod = await import('./pkg/formula_engine.js');
+      await mod.default();                   // WebAssembly.instantiate
+      wasmEngine = mod as unknown as WasmEngine;
+      return true;
+    } catch (err) {
+      console.warn('[formula-engine] WASM init failed, formulas disabled:', err);
+      initFailed = true;
+      return false;
+    }
+  })();
 
   return initPromise;
 }
 
 function isFormulaEngineDisabled(): boolean {
-  return typeof __OBJECT_DATABASE_DISABLE_WASM__ !== 'undefined' && __OBJECT_DATABASE_DISABLE_WASM__;
+  return __OBJECT_DATABASE_DISABLE_WASM__ !== undefined && __OBJECT_DATABASE_DISABLE_WASM__;
 }
 
 export function isWasmReady(): boolean {
