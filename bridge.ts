@@ -40,16 +40,26 @@ let initFailed = false;
 
 const formulaHandleCache = new Map<string, number>();
 
+declare const __OBJECT_DATABASE_DISABLE_WASM__: boolean | undefined;
+
+/** Stable placeholder returned when the optional WASM formula engine is unavailable. */
+export const FORMULA_ENGINE_UNAVAILABLE = '#ENGINE_UNAVAILABLE';
+
 /* ── Initialization (lazy, singleton, deduped) ──────────────────────────── */
 
 export async function initFormulaEngine(): Promise<boolean> {
   if (wasmEngine) return true;
   if (initFailed) return false;
+  if (isFormulaEngineDisabled()) {
+    initFailed = true;
+    return false;
+  }
 
   if (!initPromise) {
     initPromise = (async () => {
       try {
-        const mod = await import('./pkg/formula_engine.js');
+        const modulePath = './pkg/formula_engine.js';
+        const mod = await import(/* @vite-ignore */ modulePath);
         await mod.default();                   // WebAssembly.instantiate
         wasmEngine = mod as unknown as WasmEngine;
         return true;
@@ -62,6 +72,10 @@ export async function initFormulaEngine(): Promise<boolean> {
   }
 
   return initPromise;
+}
+
+function isFormulaEngineDisabled(): boolean {
+  return typeof __OBJECT_DATABASE_DISABLE_WASM__ !== 'undefined' && __OBJECT_DATABASE_DISABLE_WASM__;
 }
 
 export function isWasmReady(): boolean {
@@ -91,38 +105,38 @@ export function compileFormula(formula: string): CompileResult | null {
 /* ── One-shot eval (compile + evaluate in one WASM call) ────────────────── */
 
 export function evalFormula(formula: string, props: PropertyMap): unknown {
-  if (!wasmEngine) return '';
+  if (!wasmEngine) return FORMULA_ENGINE_UNAVAILABLE;
   try {
     const propsJson = serializeProps(props);
     const resultJson = wasmEngine.eval_formula(formula, propsJson);
     const result: EvalResult = JSON.parse(resultJson);
-    return result.ok ? fromFormulaValue(result.value) : '';
+    return result.ok ? fromFormulaValue(result.value) : FORMULA_ENGINE_UNAVAILABLE;
   } catch {
-    return '';
+    return FORMULA_ENGINE_UNAVAILABLE;
   }
 }
 
 /* ── Evaluate a pre-compiled handle ─────────────────────────────────────── */
 
 export function evaluateHandle(handle: number, props: PropertyMap): unknown {
-  if (!wasmEngine) return '';
+  if (!wasmEngine) return FORMULA_ENGINE_UNAVAILABLE;
   try {
     const propsJson = serializeProps(props);
     const resultJson = wasmEngine.evaluate(handle, propsJson);
     const result: EvalResult = JSON.parse(resultJson);
-    return result.ok ? fromFormulaValue(result.value) : '';
+    return result.ok ? fromFormulaValue(result.value) : FORMULA_ENGINE_UNAVAILABLE;
   } catch {
-    return '';
+    return FORMULA_ENGINE_UNAVAILABLE;
   }
 }
 
 /* ── Batch evaluation (single WASM round-trip for N rows) ───────────────── */
 
 export function batchEvaluate(formula: string, rows: PropertyMap[]): unknown[] {
-  if (!wasmEngine) return rows.map(() => '');
+  if (!wasmEngine) return rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
   try {
     const compiled = compileFormula(formula);
-    if (!compiled?.ok || compiled.handle === undefined) return rows.map(() => '');
+    if (!compiled?.ok || compiled.handle === undefined) return rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
 
     const rowsJson = JSON.stringify(
       rows.map(r => {
@@ -138,9 +152,9 @@ export function batchEvaluate(formula: string, rows: PropertyMap[]): unknown[] {
     const result: BatchResult = JSON.parse(resultJson);
     return result.ok && result.values
       ? result.values.map(fromFormulaValue)
-      : rows.map(() => '');
+      : rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
   } catch {
-    return rows.map(() => '');
+    return rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
   }
 }
 
