@@ -26,6 +26,7 @@ import type {
   CompileResult, EvalResult, BatchResult, ValidateResult, PropertyMap, FormulaValue,
 } from './bridgeTypes';
 import { toJsonValue, fromFormulaValue } from './bridgeTypes';
+import { desugarFormula } from '../formula/desugarFormula';
 
 export type {
   FormulaValue, CompileResult, EvalResult, BatchResult,
@@ -95,6 +96,7 @@ export function isWasmReady(): boolean {
 
 export function compileFormula(formula: string): CompileResult | null {
   if (!wasmEngine) return null;
+  formula = desugarFormula(formula);
 
   const cached = formulaHandleCache.get(formula);
   if (cached !== undefined) {
@@ -117,7 +119,7 @@ export function evalFormula(formula: string, props: PropertyMap): unknown {
   if (!wasmEngine) return FORMULA_ENGINE_UNAVAILABLE;
   try {
     const propsJson = serializeProps(props);
-    const resultJson = wasmEngine.eval_formula(formula, propsJson);
+    const resultJson = wasmEngine.eval_formula(desugarFormula(formula), propsJson);
     const result: EvalResult = JSON.parse(resultJson);
     return result.ok ? fromFormulaValue(result.value) : FORMULA_ENGINE_UNAVAILABLE;
   } catch {
@@ -144,6 +146,7 @@ export function evaluateHandle(handle: number, props: PropertyMap): unknown {
 export function batchEvaluate(formula: string, rows: PropertyMap[]): unknown[] {
   if (!wasmEngine) return rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
   try {
+    // compileFormula desugars; caching there keys on the normalized form.
     const compiled = compileFormula(formula);
     if (!compiled?.ok || compiled.handle === undefined) return rows.map(() => FORMULA_ENGINE_UNAVAILABLE);
 
@@ -172,7 +175,7 @@ export function batchEvaluate(formula: string, rows: PropertyMap[]): unknown[] {
 export function validateFormula(formula: string): ValidateResult {
   if (!wasmEngine) return { ok: true, errors: [], dependencies: [] };
   try {
-    const resultJson = wasmEngine.validate(formula);
+    const resultJson = wasmEngine.validate(desugarFormula(formula));
     return JSON.parse(resultJson);
   } catch {
     return { ok: true, errors: [], dependencies: [] };
