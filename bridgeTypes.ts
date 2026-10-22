@@ -28,6 +28,9 @@ export interface EvalResult {
   ok: boolean;
   value?: FormulaValue;
   error?: string;
+  /** Stable machine-readable code of a runtime failure (e.g. "budget_exceeded").
+   *  Absent when the engine could not classify the failure. */
+  error_code?: string;
 }
 
 export interface BatchResult {
