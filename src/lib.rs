@@ -59,6 +59,7 @@ struct EvalResult {
     ok: bool,
     value: Option<JsonValue>,
     error: Option<String>,
+    error_code: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -210,11 +211,13 @@ pub fn evaluate(handle: u32, props_json: &str) -> String {
                         ok: true,
                         value: Some(val.into()),
                         error: None,
+                        error_code: None,
                     },
                     Err(e) => EvalResult {
                         ok: false,
                         value: None,
                         error: Some(e.to_string()),
+                        error_code: Some(e.kind.code().to_string()),
                     },
                 }
             }
@@ -222,6 +225,7 @@ pub fn evaluate(handle: u32, props_json: &str) -> String {
                 ok: false,
                 value: None,
                 error: Some(format!("Formula handle {} not found", handle)),
+                error_code: None,
             },
         }
     });
@@ -244,7 +248,11 @@ pub fn batch_evaluate(handle: u32, rows_json: &str) -> String {
                         row.into_iter().map(|(k, v)| (k, v.into())).collect();
                     match eval_chunk(chunk, props) {
                         Ok(val) => values.push(val.into()),
-                        Err(_) => values.push(JsonValue::Empty),
+                        Err(_) => {
+                            // Caveat: a row over budget silently becomes Empty,
+                            // and the batch still answers ok:true.
+                            values.push(JsonValue::Empty)
+                        }
                     }
                 }
 
@@ -321,11 +329,13 @@ pub fn eval_formula(formula: &str, props_json: &str) -> String {
                     ok: true,
                     value: Some(val.into()),
                     error: None,
+                    error_code: None,
                 },
                 Err(e) => EvalResult {
                     ok: false,
                     value: None,
                     error: Some(e.to_string()),
+                    error_code: Some(e.kind.code().to_string()),
                 },
             }
         }
@@ -333,7 +343,11 @@ pub fn eval_formula(formula: &str, props_json: &str) -> String {
             ok: false,
             value: None,
             error: Some(e.to_string()),
+            error_code: Some(e.kind.code().to_string()),
         },
     };
     serde_json::to_string(&result).unwrap_or_else(|_| r#"{"ok":false,"error":"serialization error"}"#.into())
 }
+
+#[cfg(test)]
+mod tests;
