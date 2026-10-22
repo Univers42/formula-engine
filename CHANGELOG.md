@@ -2,6 +2,12 @@
 
 All notable changes are documented here.
 
+## [2026-10-22]
+
+- **16:03** `feat(types)` add the error_code field to EvalResult so the TS side reads a stable code
+- **16:03** `feat(bridge)` add the FORMULA_BUDGET_EXCEEDED sentinel and the pure surfaceEvalResult mapping
+- **16:03** `chore(pkg)` rebuild the wasm from the engine that carries the instruction budget
+
 ## [2026-03-28]
 
 - **09:19** `chore(deps)` add wasm-bindgen, serde and serde_json to Cargo.toml dependencies

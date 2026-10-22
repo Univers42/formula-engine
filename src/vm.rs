@@ -50,10 +50,13 @@ pub struct VM {
     stack: Vec<Value>,
     locals: Vec<Value>,
     max_stack: usize,
+    pub(crate) fuel: u64,
+    pub(crate) max_fuel: u64,
 }
 
 const MAX_STACK_SIZE: usize = 10_000;
 const MAX_CALL_DEPTH: usize = 256;
+pub(crate) const DEFAULT_MAX_FUEL: u64 = 1_000_000;
 
 impl VM {
     pub fn new() -> Self {
@@ -61,6 +64,18 @@ impl VM {
             stack: Vec::with_capacity(256),
             locals: Vec::new(),
             max_stack: MAX_STACK_SIZE,
+            fuel: DEFAULT_MAX_FUEL,
+            max_fuel: DEFAULT_MAX_FUEL,
+        }
+    }
+
+    pub fn with_budget(max_fuel: u64) -> Self {
+        Self {
+            stack: Vec::with_capacity(256),
+            locals: Vec::new(),
+            max_stack: MAX_STACK_SIZE,
+            fuel: max_fuel,
+            max_fuel,
         }
     }
 
@@ -89,6 +104,13 @@ impl VM {
         let mut ip = 0;
 
         while ip < code.len() {
+            if self.fuel == 0 {
+                return Err(FormulaError::new(ErrorKind::BudgetExceeded {
+                    limit: self.max_fuel,
+                }, None));
+            }
+            self.fuel -= 1;
+
             if self.stack.len() > self.max_stack {
                 return Err(FormulaError::new(ErrorKind::StackOverflow, None));
             }
