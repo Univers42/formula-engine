@@ -58,6 +58,15 @@ declare const __OBJECT_DATABASE_DISABLE_WASM__: boolean | undefined;
 /** Stable placeholder returned when the optional WASM formula engine is unavailable. */
 export const FORMULA_ENGINE_UNAVAILABLE = '#ENGINE_UNAVAILABLE';
 
+/**
+ * Stable placeholder returned when a formula exhausted the engine's instruction
+ * budget.
+ *
+ * Caveat: the budget bounds ONE evaluation, not one page — a view with 1 000 rows
+ * evaluates the formula 1 000 times, and each of those gets the whole budget.
+ */
+export const FORMULA_BUDGET_EXCEEDED = '#BUDGET_EXCEEDED';
+
 /* ── Initialization (lazy, singleton, deduped) ──────────────────────────── */
 
 export async function initFormulaEngine(): Promise<boolean> {
@@ -115,13 +124,28 @@ export function compileFormula(formula: string): CompileResult | null {
 
 /* ── One-shot eval (compile + evaluate in one WASM call) ────────────────── */
 
+/**
+ * Maps one engine result onto what the app shows.
+ *
+ * A pure function on purpose: the wasm is `--target web` and cannot load under
+ * Node, so the mapping is exercised without it. The decision reads
+ * `error_code` only — never the message — so a reworded error text can never
+ * change what a reader sees, and only the one budget code reads as a budget
+ * stop. Every other failure keeps the older "#ENGINE_UNAVAILABLE".
+ */
+export function surfaceEvalResult(result: EvalResult): unknown {
+  if (result.ok) return fromFormulaValue(result.value);
+  if (result.error_code === 'budget_exceeded') return FORMULA_BUDGET_EXCEEDED;
+  return FORMULA_ENGINE_UNAVAILABLE;
+}
+
 export function evalFormula(formula: string, props: PropertyMap): unknown {
   if (!wasmEngine) return FORMULA_ENGINE_UNAVAILABLE;
   try {
     const propsJson = serializeProps(props);
     const resultJson = wasmEngine.eval_formula(desugarFormula(formula), propsJson);
     const result: EvalResult = JSON.parse(resultJson);
-    return result.ok ? fromFormulaValue(result.value) : FORMULA_ENGINE_UNAVAILABLE;
+    return surfaceEvalResult(result);
   } catch {
     return FORMULA_ENGINE_UNAVAILABLE;
   }
@@ -135,7 +159,7 @@ export function evaluateHandle(handle: number, props: PropertyMap): unknown {
     const propsJson = serializeProps(props);
     const resultJson = wasmEngine.evaluate(handle, propsJson);
     const result: EvalResult = JSON.parse(resultJson);
-    return result.ok ? fromFormulaValue(result.value) : FORMULA_ENGINE_UNAVAILABLE;
+    return surfaceEvalResult(result);
   } catch {
     return FORMULA_ENGINE_UNAVAILABLE;
   }

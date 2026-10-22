@@ -51,9 +51,40 @@ pub enum ErrorKind {
     InvalidRegex(String),
     StackOverflow,
     CircularDependency(Vec<String>),
+    BudgetExceeded { limit: u64 },
 
     // General
     Internal(String),
+}
+
+impl ErrorKind {
+    /// Stable machine-readable code for this error kind.
+    /// Used by the TS bridge to distinguish error types (e.g. budget_exceeded
+    /// vs stack_overflow vs engine_unavailable).
+    pub fn code(&self) -> &'static str {
+        match self {
+            ErrorKind::UnexpectedCharacter(_) => "unexpected_character",
+            ErrorKind::UnterminatedString => "unterminated_string",
+            ErrorKind::InvalidNumber(_) => "invalid_number",
+            ErrorKind::UnexpectedToken(_) => "unexpected_token",
+            ErrorKind::ExpectedToken(_, _) => "expected_token",
+            ErrorKind::UnexpectedEof => "unexpected_eof",
+            ErrorKind::InvalidAssignment => "invalid_assignment",
+            ErrorKind::TooManyConstants => "too_many_constants",
+            ErrorKind::TooManyLocals => "too_many_locals",
+            ErrorKind::TypeError(_) => "type_error",
+            ErrorKind::DivisionByZero => "division_by_zero",
+            ErrorKind::PropertyNotFound(_) => "property_not_found",
+            ErrorKind::FunctionNotFound(_) => "function_not_found",
+            ErrorKind::ArityMismatch(_, _, _) => "arity_mismatch",
+            ErrorKind::IndexOutOfBounds(_, _) => "index_out_of_bounds",
+            ErrorKind::InvalidRegex(_) => "invalid_regex",
+            ErrorKind::StackOverflow => "stack_overflow",
+            ErrorKind::CircularDependency(_) => "circular_dependency",
+            ErrorKind::BudgetExceeded { .. } => "budget_exceeded",
+            ErrorKind::Internal(_) => "internal_error",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -98,6 +129,9 @@ impl FormulaError {
             ErrorKind::StackOverflow => "Stack overflow — formula too deeply nested".into(),
             ErrorKind::CircularDependency(chain) => {
                 format!("Circular dependency: {}", chain.join(" → "))
+            }
+            ErrorKind::BudgetExceeded { limit } => {
+                format!("Formula budget exceeded: more than {limit} instructions").into()
             }
             ErrorKind::Internal(msg) => format!("Internal error: {}", msg),
         };
