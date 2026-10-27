@@ -94,7 +94,7 @@ export async function initFormulaEngine(): Promise<boolean> {
 }
 
 function isFormulaEngineDisabled(): boolean {
-  return __OBJECT_DATABASE_DISABLE_WASM__ !== undefined && __OBJECT_DATABASE_DISABLE_WASM__;
+  return typeof __OBJECT_DATABASE_DISABLE_WASM__ !== 'undefined' && __OBJECT_DATABASE_DISABLE_WASM__ === true;
 }
 
 export function isWasmReady(): boolean {
